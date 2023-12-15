@@ -39,6 +39,7 @@ class Coffee:
             return total/count
 
 class Customer:
+
     def __init__(self, name):
         self.name = name
 
@@ -62,6 +63,48 @@ class Customer:
     
     def create_order(self, coffee, price):
         return Order(self, coffee, price)
+    
+    @classmethod
+    def most_aficionado(cls, coffee):
+        spenders = {}
+        current = None
+        big_spender = None
+        big_total = 0
+
+        for order in Order.all:
+            if order.coffee is coffee:
+                total = 0
+                current = order.customer
+                print(f"{order.price}")
+
+                if f"{current}" in spenders:                        
+                    current_total = spenders[f"{current}"]
+                    print(f"{current.name} in spenders. Current total = {current_total}")
+                    total = spenders[f"{current}"] + order.price
+                    spenders[f"{current}"] = total
+                    print(f"{current.name} new Total is:")
+                    print(spenders[f"{current}"])
+                    print(total)
+                else:
+                    spenders[f"{current}"] = order.price
+                    total = order.price
+    
+                if big_spender == None:
+                    print("No Big Spender. Setting Big Spender to:")
+                    print(f"{current.name} with a total of {total}")
+                    big_spender = current
+                    big_total = total
+                elif big_total < total:
+                    print(f"{current.name} has spent more than {big_spender.name} with {total}")
+                    big_spender = current
+                    big_total = total
+                
+        return big_spender
+
+
+
+
+
     
 class Order:
 
